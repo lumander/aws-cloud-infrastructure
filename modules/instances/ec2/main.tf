@@ -23,7 +23,7 @@ resource "aws_security_group" "sg_access_from_bastion_ssh" {
 }
 
 resource "aws_instance" "ec2" {
-for_each = var.availability_zones
+for_each = toset(var.availability_zones)
 
   ami           = var.ami
   instance_type = var.instance_type
