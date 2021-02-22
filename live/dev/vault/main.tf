@@ -61,7 +61,7 @@ resource "null_resource" "vault_private_key_to_bastion" {
   provisioner "remote-exec" {
     
     inline = [
-      "chmod 400 ~/.ssh/dev-aws-vault"
+      "chmod 400 ~/.ssh/dev-aws-vault.pem"
     ]
     
     connection {
