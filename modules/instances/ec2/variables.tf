@@ -34,7 +34,7 @@ variable "subnet_id" {
 }
 
 variable "availability_zones" {
-    type = list(string)
+    type = map(string)
     description = "List of the availability zones where to deploy"
 }
 
