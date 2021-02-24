@@ -1,0 +1,24 @@
+ui = true
+disable_mlock = true
+
+storage "raft" {
+path="/etc/vault/data/"
+node_id="{{ inventory_hostname }}"
+
+{% for address in groups['vault_servers'] %}
+{% if address == inventory_hostname %}
+{% else %}
+retry_join {
+leader_api_addr="http://{{ address }}:8200"
+}
+{% endif %}
+{% endfor %}
+}
+
+listener "tcp" {
+address="0.0.0.0:8200"
+tls_disable="true"
+}
+
+api_addr="http://127.0.0.1:8200"
+cluster_addr="http://127.0.0.1:8201"

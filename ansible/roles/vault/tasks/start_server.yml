@@ -1,0 +1,8 @@
+---
+- name: "Create template file"
+  template:
+    src: config.hcl.j2
+    dest: "/etc/vault/config/config_{{ inventory_hostname }}.hcl"
+
+- name: "Start server"
+  command: "vault server -config=/etc/vault/config/config_{{ inventory_hostname }}.hcl"

@@ -1,0 +1,23 @@
+---
+- name: "Add the HashiCorp GPG key"
+  apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: "Add the official HashiCorp Linux repository"
+  apt_repository:
+    repo: "deb https://apt.releases.hashicorp.com bionic main"
+    state: present
+
+- name: "Update and install"
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    pkg:
+      - vault
+    state: present
+
+- name: "Verify installation"
+  command: "vault --version"
+  register: vault_cli_version
+  failed_when: vault_cli_version.rc != 0

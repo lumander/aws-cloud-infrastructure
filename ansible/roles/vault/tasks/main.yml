@@ -1,0 +1,9 @@
+---
+- name: "Configure vm"
+  include_tasks: configure_vm.yml
+
+- name: "Install Vault"
+  include_tasks: install_vault.yml
+
+- name: "Start Vault Server"
+  include_tasks: start_server.yml

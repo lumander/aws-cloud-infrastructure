@@ -1,0 +1,8 @@
+---
+- hosts: vault_servers
+  become: yes
+  become_user: root
+  serial: 1
+
+  roles:
+    - vault
