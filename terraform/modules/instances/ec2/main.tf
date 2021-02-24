@@ -14,6 +14,13 @@ resource "aws_security_group" "sg_access_from_bastion_ssh" {
     security_groups = [var.bastion_security_group_id]
   }
 
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   vpc_id = var.vpc_id
   
   tags = {
