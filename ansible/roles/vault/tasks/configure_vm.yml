@@ -1,9 +1,43 @@
 ---
-- name: "Create necessary directories"
+- name: "Set cap_ipc_lock=+ep on /usr/local/bin/vault @why mlock syscall prevents memory swap"
+  capabilities:
+    path: "{{ which_vault }}"
+    capability: cap_ipc_lock=+ep
+    state: present
+
+- name: "User and group setup"
+  block:
+    - name: "Create vault group"
+      group:
+        name: vault
+        state: present
+    - name: "Create vault user"
+      user:
+        name: vault
+        comment: Vault system account
+        group: vault
+        shell: /bin/false
+        home: "{{ vault_home }}"
+        system: yes
+        state: present
+    - name: "Create vault home directory {{ vault_home }}"
+      file:
+        path: "{{ vault_home }}"
+        state: directory
+        owner: vault
+        group: vault
+
+- name: "Create configuration file at {{ vault_home }}"
+  template:
+    src: config.hcl.j2
+    dest: "{{ vault_home }}/{{ vault_config_file }}.hcl"
+    owner: vault
+    group: vault
+    mode: 0640
+
+- name: "Create raft storage directory {{ raft_storage_path }}"
   file:
-    path: "{{ item }}"
+    path: "{{ raft_storage_path }}"
     state: directory
-    mode: '0755'
-  loop:
-    - /etc/vault/config
-    - /etc/vault/data
+    owner: vault
+    group: vault

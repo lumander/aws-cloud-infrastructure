@@ -1,0 +1,6 @@
+---
+which_vault: /usr/bin/vault
+vault_home: /etc/vault.d
+vault_node_id: "{{ inventory_hostname | hash('sha1') | truncate(6, True, '') }}"
+vault_config_file: vault_{{ vault_node_id }}
+raft_storage_path: /opt/raft

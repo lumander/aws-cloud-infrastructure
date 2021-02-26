@@ -1,9 +1,8 @@
 ui = true
-disable_mlock = true
 
 storage "raft" {
-path="/etc/vault/data/"
-node_id="{{ inventory_hostname }}"
+path="{{ raft_storage_path }}"
+node_id="{{ vault_node_id }}"
 
 {% for address in groups['vault_servers'] %}
 {% if address == inventory_hostname %}
@@ -20,5 +19,5 @@ address="0.0.0.0:8200"
 tls_disable="true"
 }
 
-api_addr="http://127.0.0.1:8200"
-cluster_addr="http://127.0.0.1:8201"
+api_addr="http://{{ inventory_hostname }}:8200"
+cluster_addr="http://{{ inventory_hostname }}:8201"
