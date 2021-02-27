@@ -1,7 +1,16 @@
 ---
+- name: "Locate Vault installation path"
+  block:
+    - name: "Locate Vault - exec which vault"
+      command: "which vault"
+      register: which_vault
+    - name: "Store vault path variable"
+      set_fact:
+        vault_path: "{{ which_vault.stdout }}"
+
 - name: "Set cap_ipc_lock=+ep on /usr/local/bin/vault @why mlock syscall prevents memory swap"
   capabilities:
-    path: "{{ which_vault }}"
+    path: "{{ vault_path }}"
     capability: cap_ipc_lock=+ep
     state: present
 
