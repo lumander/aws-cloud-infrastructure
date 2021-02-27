@@ -28,6 +28,11 @@ variable "vpc_id" {
     description = "VPC id"
 }
 
+variable "extra_security_groups" {
+    type = list(string)
+    description = "Extra security groups for ec2"
+}
+
 variable "subnet_id" {
     type = map(string)
     description = "Map containing the bind between zones and subnets"

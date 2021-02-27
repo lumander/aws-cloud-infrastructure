@@ -37,6 +37,7 @@ module "vault" {
     key_name                    = var.vault.key_name
     public_key                  = var.vault.public_key
     vpc_id                      = local.network_info["default_vpc"]
+    extra_security_groups       = [aws_security_group.vault_servers_traffic.id]
     subnet_id                   = local.network_info["subnets"][var.environment]["private"]
     environment                 = var.environment
     role                        = var.role
@@ -83,40 +84,16 @@ resource "aws_security_group" "vault_servers_traffic" {
     from_port = 8200
     to_port = 8200
     protocol = "tcp"
-    cidr_blocks = ["172.31.3.0/24"]
-  }
-  ingress {
-    from_port = 8200
-    to_port = 8200
-    protocol = "tcp"
-    cidr_blocks = ["172.31.4.0/24"]
-  }
-  ingress {
-    from_port = 8200
-    to_port = 8200
-    protocol = "tcp"
-    cidr_blocks = ["172.31.5.0/24"]
+    self = "true"
+    description = "client-to-server requests"
   }
 
   ingress {
     from_port = 8201
     to_port = 8201
     protocol = "tcp"
-    cidr_blocks = ["172.31.3.0/24"]
-  }
-
-  ingress {
-    from_port = 8201
-    to_port = 8201
-    protocol = "tcp"
-    cidr_blocks = ["172.31.4.0/24"]
-  }
-
-  ingress {
-    from_port = 8201
-    to_port = 8201
-    protocol = "tcp"
-    cidr_blocks = ["172.31.5.0/24"]
+    self = "true"
+    description = "server-to-server cluster requests"
   }
 
   egress {
