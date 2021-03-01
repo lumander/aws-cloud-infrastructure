@@ -1,0 +1,14 @@
+---
+# requires boto3 and botocore
+# set also AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+plugin: aws_ec2
+regions:
+  - eu-west-1
+filters:
+  tag:environment: dev
+groups:
+  bastion: "'bastion' in (tags.role)"
+  vault_servers: "'vault' in (tags.role)"
+compose:
+  # set the ansible_host variable to connect with the private IP address without changing the hostname
+  ansible_host: public_ip_address

@@ -1,0 +1,4 @@
+---
+- name: "Setting key share"
+  shell: "export VAULT_ADDR=http://127.0.0.1:8200 && vault operator init -recovery-shares=5 -recovery-threshold=3"
+  register: vault_operator_init

@@ -10,3 +10,6 @@
 
 - name: "Start Vault Server"
   include_tasks: start_server.yml
+
+- name: "Unseal Vault Server"
+  include_tasks: unseal_server.yml

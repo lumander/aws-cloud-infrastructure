@@ -1,2 +1,3 @@
 ---
 ansible_ssh_common_args: '-o IdentityFile=~/.ssh/dev-aws-vault -o ProxyCommand="ssh -W %h:%p -q ubuntu@{{ groups.bastion[0] }} -o IdentityFile=~/.ssh/dev-aws-bastion"'
+vault_autounseal_key_name: dev-aws-vault-autounseal

@@ -45,6 +45,11 @@ module "vault" {
 
 ## resources block
 
+resource "aws_key_pair" "vault_autounseal" {
+  key_name   = var.vault.autounseal.key_name
+  public_key = var.vault.autounseal.public_key
+}
+
 resource "null_resource" "vault_private_key_to_bastion" {
 
   provisioner "file" {
