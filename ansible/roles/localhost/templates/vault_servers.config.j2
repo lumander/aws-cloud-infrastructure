@@ -1,0 +1,10 @@
+{% for server in groups['vault_servers'] %}
+Host dev.vault.{{ loop.index }}
+  HostName {{ server }}
+  User ubuntu
+  Port 22
+  IdentityFile ~/.ssh/dev-aws-vault
+  ProxyCommand ssh -W %h:%p -q dev.bastion
+  LocalForward 8200 localhost:8200
+
+{% endfor %}

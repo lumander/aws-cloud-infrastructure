@@ -1,0 +1,8 @@
+{% for server in groups['bastion'] %}
+Host dev.bastion
+  HostName {{ server }}
+  User ubuntu
+  Port 22
+  IdentityFile ~/.ssh/dev-aws-bastion
+
+{% endfor %}

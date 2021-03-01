@@ -1,0 +1,16 @@
+---
+- name: "Update ssh config with bastion"
+  blockinfile:
+    path: ~/.ssh/config
+    marker: "#### {mark} - DEV ANSIBLE MANAGED BLOCK - bastion host ####"
+    block: |+
+
+      {{ lookup('template','bastion.config.j2') }}
+
+- name: "Update ssh config with Vault servers"
+  blockinfile:
+    path: ~/.ssh/config
+    marker: "#### {mark} - DEV ANSIBLE MANAGED BLOCK - Vault servers ####"
+    block: |+
+
+      {{ lookup('template','vault_servers.config.j2') }}
