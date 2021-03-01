@@ -18,14 +18,15 @@ data "aws_s3_bucket_object" "network_info" {
 }
 
 module "bastion" {
-    source        = "../../../modules/instances/bastion"
-    ami           = var.bastion.ami
-    instance_type = var.bastion.instance_type
-    key_name      = var.bastion.key_name
-    public_key    = var.bastion.public_key
-    vpc_id        = local.network_info["default_vpc"]
-    subnet_id     = local.network_info["subnets"]["dev"]["public"]["eu-west-1a"]
-    environment   = var.environment
+    source              = "../../../modules/instances/bastion"
+    ami                 = var.bastion.ami
+    instance_type       = var.bastion.instance_type
+    key_name            = var.bastion.key_name
+    public_key          = var.bastion.public_key
+    trusted_cidr_blocks = var.bastion.trusted_cidr_blocks
+    vpc_id              = local.network_info["default_vpc"]
+    subnet_id           = local.network_info["subnets"]["dev"]["public"]["eu-west-1a"]
+    environment         = var.environment
 }
 
 resource "aws_s3_bucket_object" "bastion_info" {

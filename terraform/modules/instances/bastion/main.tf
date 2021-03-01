@@ -11,7 +11,7 @@ resource "aws_security_group" "sg_bastion_ssh" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["2.34.2.153/32"]
+    cidr_blocks = var.trusted_cidr_blocks
   }
 
   egress {
