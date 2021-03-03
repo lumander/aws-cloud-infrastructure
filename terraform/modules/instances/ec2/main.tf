@@ -51,6 +51,7 @@ resource "aws_instance" "ec2" {
   associate_public_ip_address = var.associate_public_ip_address
   vpc_security_group_ids = concat([ aws_security_group.sg_access_from_bastion_ssh.id ], var.extra_security_groups )
   subnet_id = var.subnet_id[each.value.zone]
+  iam_instance_profile = var.iam_instance_profile
 
   tags = {
     role = var.role

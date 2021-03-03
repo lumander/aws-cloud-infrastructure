@@ -48,6 +48,12 @@ variable "associate_public_ip_address" {
     description = "Whether to associate a public ip or not"
 }
 
+variable "iam_instance_profile" {
+    type = string
+    description = "IAM Instance Profile to launch the instance with"
+    default = null
+}
+
 variable "role" {
     type = string
     description = "Logical purpose of the machine - used for tags"

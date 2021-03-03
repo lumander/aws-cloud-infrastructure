@@ -8,7 +8,7 @@
       set_fact:
         vault_path: "{{ which_vault.stdout }}"
 
-- name: "Set cap_ipc_lock=+ep on /usr/local/bin/vault @why mlock syscall prevents memory swap"
+- name: "Set cap_ipc_lock=+ep on {{ vault_path }} @why mlock syscall prevents memory swap"
   capabilities:
     path: "{{ vault_path }}"
     capability: cap_ipc_lock=+ep

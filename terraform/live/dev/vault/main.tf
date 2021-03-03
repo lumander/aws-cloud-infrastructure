@@ -41,13 +41,20 @@ module "vault" {
     subnet_id                   = local.network_info["subnets"][var.environment]["private"]
     environment                 = var.environment
     role                        = var.role
+    iam_instance_profile        = aws_iam_instance_profile.vault-kms-unseal.id
 }
 
 ## resources block
 
-resource "aws_key_pair" "vault_autounseal" {
-  key_name   = var.vault.autounseal.key_name
-  public_key = var.vault.autounseal.public_key
+resource "aws_kms_key" "vault" {
+  description             = "Vault unseal key"
+  deletion_window_in_days = 10
+
+  tags = {
+    name = "${var.vault.autounseal.key_name}-${random_pet.env.id}"
+    role = format("%s-to-%s",var.role, var.role)
+    environment = var.environment
+  }
 }
 
 resource "null_resource" "vault_private_key_to_bastion" {
@@ -114,4 +121,53 @@ resource "aws_security_group" "vault_servers_traffic" {
     role = format("%s-to-%s",var.role, var.role)
     environment = var.environment
   }
+}
+
+### necessary permissions for autounseal with AWS KMS
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "vault_kms_unseal" {
+  statement {
+    sid       = "VaultKMSUnseal"
+    effect    = "Allow"
+    resources = ["*"]
+
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
+  }
+}
+
+resource "random_pet" "env" {
+  length    = 2
+  separator = "_"
+}
+
+resource "aws_iam_role" "vault_kms_unseal" {
+  name               = "VaultKMSUnsealRole${random_pet.env.id}"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+}
+
+resource "aws_iam_role_policy" "vault_kms_unseal" {
+  name   = "VaultKMSUnsealRolePolicy-${random_pet.env.id}"
+  role   = aws_iam_role.vault_kms_unseal.id
+  policy = data.aws_iam_policy_document.vault_kms_unseal.json
+}
+
+resource "aws_iam_instance_profile" "vault-kms-unseal" {
+  name = "VaultKMSUnsealInstanceProfile-${random_pet.env.id}"
+  role = aws_iam_role.vault_kms_unseal.name
 }
