@@ -51,7 +51,7 @@ resource "aws_kms_key" "vault" {
   deletion_window_in_days = 10
 
   tags = {
-    name = "${var.vault.autounseal.key_name}-${random_pet.env.id}"
+    name = "${var.vault.autounseal.key_name}"
     role = format("%s-to-%s",var.role, var.role)
     environment = var.environment
   }
@@ -151,23 +151,18 @@ data "aws_iam_policy_document" "vault_kms_unseal" {
   }
 }
 
-resource "random_pet" "env" {
-  length    = 2
-  separator = "_"
-}
-
 resource "aws_iam_role" "vault_kms_unseal" {
-  name               = "VaultKMSUnsealRole${random_pet.env.id}"
+  name               = "VaultKMSUnsealRole"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_role_policy" "vault_kms_unseal" {
-  name   = "VaultKMSUnsealRolePolicy-${random_pet.env.id}"
+  name   = "VaultKMSUnsealRolePolicy"
   role   = aws_iam_role.vault_kms_unseal.id
   policy = data.aws_iam_policy_document.vault_kms_unseal.json
 }
 
 resource "aws_iam_instance_profile" "vault-kms-unseal" {
-  name = "VaultKMSUnsealInstanceProfile-${random_pet.env.id}"
+  name = "VaultKMSUnsealInstanceProfile"
   role = aws_iam_role.vault_kms_unseal.name
 }
