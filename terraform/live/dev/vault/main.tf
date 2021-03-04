@@ -51,7 +51,7 @@ resource "aws_kms_key" "vault" {
   deletion_window_in_days = 10
 
   tags = {
-    name = "${var.vault.autounseal.key_name}"
+    name = var.vault.autounseal.key_name
     role = format("%s-to-%s",var.role, var.role)
     environment = var.environment
   }
@@ -165,4 +165,17 @@ resource "aws_iam_role_policy" "vault_kms_unseal" {
 resource "aws_iam_instance_profile" "vault-kms-unseal" {
   name = "VaultKMSUnsealInstanceProfile"
   role = aws_iam_role.vault_kms_unseal.name
+}
+
+resource "aws_s3_bucket_object" "vault_info" {
+  bucket = "3673fe-tf-state"
+  key    = "dev/vault/vault-info.json"
+  content = <<EOF
+{
+  "kms": {
+    "id":"${aws_kms_key.vault.id}" 
+  }
+}
+EOF
+  content_type = "application/json"
 }

@@ -44,9 +44,26 @@
     group: vault
     mode: 0640
 
+- name: "Create env script file at /etc/profile.d"
+  template:
+    src: vault.sh.j2
+    dest: "/etc/profile.d/vault.sh"
+    owner: vault
+    group: vault
+    mode: 0100
+
 - name: "Create raft storage directory {{ raft_storage_path }}"
   file:
     path: "{{ raft_storage_path }}"
     state: directory
     owner: vault
     group: vault
+
+- name: "Update .bashrc file with Vault env"
+  blockinfile:
+    path: /etc/environment
+    marker: "#### {mark} - ANSIBLE MANAGED BLOCK - ####"
+    block: |+
+
+      export VAULT_SKIP_VERIFY=true
+      export VAULT_ADDR=http://127.0.0.1:8200

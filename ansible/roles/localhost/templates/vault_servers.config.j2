@@ -5,6 +5,6 @@ Host dev.vault.{{ loop.index }}
   Port 22
   IdentityFile ~/.ssh/dev-aws-vault
   ProxyCommand ssh -W %h:%p -q dev.bastion
-  LocalForward 8200 localhost:8200
+  LocalForward 820{{ loop.index }} localhost:8200
 
 {% endfor %}

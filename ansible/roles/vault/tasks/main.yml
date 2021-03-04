@@ -1,4 +1,11 @@
 ---
+- name: "Read info from S3"
+  connection: local
+  become: yes
+  become_user: lumander
+  shell: "aws s3 cp s3://3673fe-tf-state/dev/vault/vault-info.json - | jq -r '.kms.id'"
+  register: vault_kms_id
+
 - name: "Install Vault"
   include_tasks: install_vault.yml
 
