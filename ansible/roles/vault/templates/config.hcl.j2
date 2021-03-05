@@ -19,7 +19,10 @@ address="0.0.0.0:8200"
 tls_disable="true"
 }
 
-seal "awskms" {}
+seal "awskms" {
+region="eu-west-1"
+kms_key_id="{{ vault_kms_id.stdout }}"
+}
 
 api_addr="http://{{ inventory_hostname }}:8200"
 cluster_addr="http://{{ inventory_hostname }}:8201"
